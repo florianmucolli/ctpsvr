@@ -6,6 +6,8 @@ using System.Net;
 using System.IO;
 using Citport.json;
 using Newtonsoft.Json.Linq;
+using Citiport.Cache;
+using System.Web;
 
 namespace Citiport.Net.Flickr
 {
@@ -39,9 +41,10 @@ namespace Citiport.Net.Flickr
             {
                 if (nvp.Name == key)
                 {
-                    StringBuilder sb = new StringBuilder();
-                    nvp.WriteJson(sb);
-                    return sb.ToString();
+                    //StringBuilder sb = new StringBuilder();
+                    //nvp.WriteJson(sb);
+                    //return sb.ToString();
+                    return nvp.Value.ToString();
                 }
             }
             return null;
@@ -72,9 +75,9 @@ namespace Citiport.Net.Flickr
         // http://farm{farm-id}.static.flickr.com/{server-id}/{id}_{secret}_[mstzb].jpg
         const string PHOTO_SOURCE_URL = "http://farm{0}.static.flickr.com/{1}/{2}_{3}_{4}.jpg";
 
-        public static List<JsonObject> Parser(String json, String p_size)
+        public static List<FlickrPhoto> Parser(String json, String p_size)
         {
-            List<JsonObject> result = new List<JsonObject>();
+            List<FlickrPhoto> result = new List<FlickrPhoto>();
             JObject o = JObject.Parse(json);
             if (o != null)
             {
@@ -93,7 +96,7 @@ namespace Citiport.Net.Flickr
                                 {
                                     FlickrPhoto fphoto = new FlickrPhoto();
                                     fphoto.Id = (String)_p["id"];
-                                    fphoto.Title = (String)_p["title"];
+                                    fphoto.Title = (HttpUtility.UrlEncode((String)_p["title"]));
                                     string url = String.Format(PHOTO_SOURCE_URL,
                                         (int)_p["farm"],
                                         (String)_p["server"],
@@ -121,23 +124,23 @@ namespace Citiport.Net.Flickr
         //refer: http://www.flickr.com/services/api/explore/?method=flickr.photos.search;
         const string REQUEST_URL = "http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key={0}&tags={1}&sort={2}&format=json&nojsoncallback=1";
 
-        public delegate void OnReceivedDataDelegate(List<JsonObject> result);
+        public List<FlickrPhoto> Fetch(String key, String ordby)
+        {
+            return this.Fetch(key, ordby, "m");
+        }
 
-        public event OnReceivedDataDelegate OnReceived;
-
-        public delegate void OnFailedDelegate(string input);
-
-        public event OnFailedDelegate OnFailed;
-
-        public delegate void OnConnectionDoneDelegate(string url);
-
-        public event OnConnectionDoneDelegate OnConnectionDone;
-
-        public void Fetch(String key, String ordby)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="ordby">date-posted-asc, date-posted-desc, date-taken-asc, date-taken-desc, interestingness-desc, interestingness-asc, and relevance</param>
+        /// <param name="size"></param>
+        public List<FlickrPhoto> Fetch(String key, String ordby, String size)
         {
             HttpWebResponse response = null;
             String url = String.Format(REQUEST_URL,
                 API_KEY, key, ordby);
+
             try
             {
                 HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
@@ -150,11 +153,8 @@ namespace Citiport.Net.Flickr
 
                     // Console application output  
                     String result = reader.ReadToEnd();
-                    if (OnReceived != null)
-                    {
-                        List<JsonObject> _r = FlickrParser.Parser(result, "m");
-                        OnReceived(_r);
-                    }
+                    List<FlickrPhoto> _r = FlickrParser.Parser(result, size);
+                    return _r;
                 }
             }
             catch (WebException wex)
@@ -165,18 +165,15 @@ namespace Citiport.Net.Flickr
                 {
                     using (HttpWebResponse errorResponse = (HttpWebResponse)wex.Response)
                     {
-                        //throw new WebRequstBaseException(Citiport.Core.Error.LogLevel.Error, url, (int)errorResponse.StatusCode, "Error in request");
-                        if (OnFailed != null)
-                            OnFailed(wex.Message);
+                        throw wex;
                     }
                 }
             }
             finally
             {
                 if (response != null) { response.Close(); }
-                if (OnConnectionDone != null)
-                    OnConnectionDone(url);
             }
+            return new List<FlickrPhoto>();
         }
     }
 }

@@ -21,16 +21,16 @@ namespace CtpSvr
             this._context = context;
 
             FlickrFetcher fetcher = new FlickrFetcher();
-            fetcher.OnReceived += new FlickrFetcher.OnReceivedDataDelegate(fetched);
-            fetcher.Fetch("taipei", "interestingness-desc");
+            fetched(fetcher.Fetch("taipei", "interestingness-desc"));
             context.Response.ContentType = "application/json";
         }
 
-        protected void fetched(List<JsonObject> result)
+        protected void fetched(List<FlickrPhoto> result)
         {
+            List<JsonObject> _r = result.Select(x => (JsonObject)x).ToList<JsonObject>();
             AjaxResponse response = new AjaxResponse();
             response.Status = "OK";
-            response.RawData = result;
+            response.RawData = _r;
             _context.Response.Write(response.ToString());
         }
 
