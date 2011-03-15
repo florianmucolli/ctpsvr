@@ -14,9 +14,9 @@ namespace CtpSvr.Sandbox
         {
             String filepath = MapPath("/Sandbox/tmp/tiled.jpg");
             System.Drawing.Image bmp = Bitmap.FromFile(filepath);
-            String base64 = DataUtil.ImageToBase64(bmp, System.Drawing.Imaging.ImageFormat.Jpeg);
+            String base64 = Citiport.Util.DataUtil.ImageToBase64(bmp, System.Drawing.Imaging.ImageFormat.Jpeg);
             Response.Write(base64);
-            System.Drawing.Image result = DataUtil.Base64ToImage(base64);
+            System.Drawing.Image result = Citiport.Util.DataUtil.Base64ToImage(base64);
             result.Save(MapPath("/Sandbox/tmp/result.jpg"));
             result.Dispose();
         }

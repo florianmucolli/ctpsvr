@@ -123,11 +123,27 @@ namespace Citiport.Net.Flickr
 
         //refer: http://www.flickr.com/services/api/explore/?method=flickr.photos.search;
         const string REQUEST_URL = "http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key={0}&tags={1}&sort={2}&format=json&nojsoncallback=1";
+        const string GROUP_REQUEST_URL = "http://api.flickr.com/services/rest/?method=flickr.groups.pools.getPhotos&api_key={0}&group_id={1}&format=json&nojsoncallback=1";
 
         public List<FlickrPhoto> Fetch(String key, String ordby)
         {
             return this.Fetch(key, ordby, "m");
         }
+
+        public List<FlickrPhoto> Fetch(String key, String ordby, String size)
+        {
+            String url = String.Format(REQUEST_URL,
+               API_KEY, key, ordby);
+            return _fetch(url, size);
+        }
+
+        public List<FlickrPhoto> FetchGroup(String groupid, String size)
+        {
+            String url = String.Format(GROUP_REQUEST_URL,
+                API_KEY, groupid);
+            return _fetch(url, size);
+        }
+
 
         /// <summary>
         /// 
@@ -135,11 +151,10 @@ namespace Citiport.Net.Flickr
         /// <param name="key"></param>
         /// <param name="ordby">date-posted-asc, date-posted-desc, date-taken-asc, date-taken-desc, interestingness-desc, interestingness-asc, and relevance</param>
         /// <param name="size"></param>
-        public List<FlickrPhoto> Fetch(String key, String ordby, String size)
+        private List<FlickrPhoto> _fetch(String url, String size)
         {
             HttpWebResponse response = null;
-            String url = String.Format(REQUEST_URL,
-                API_KEY, key, ordby);
+           
 
             try
             {

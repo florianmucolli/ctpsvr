@@ -83,7 +83,7 @@ namespace Citiport.Photo
                 if(this.cacheManager != null)
                  this.cacheManager.put(base64, keyword);
             } 
-            return (Bitmap)DataUtil.Base64ToImage(base64);
+            return (Bitmap)Citiport.Util.DataUtil.Base64ToImage(base64);
         }
 
         private String tilerInternalToBase64Jpeg(string keyword, int w, int count, String orderby)
@@ -94,7 +94,7 @@ namespace Citiport.Photo
             List<String> urls = result.Take(count).Select(x => x.Url).ToList<String>();
             FlickrImageTiler tiler = new FlickrImageTiler();
             Bitmap bmp = (Bitmap)tiler.tiler(urls, 5);
-            String base64 = DataUtil.ImageToBase64(bmp, System.Drawing.Imaging.ImageFormat.Jpeg);
+            String base64 = Citiport.Util.DataUtil.ImageToBase64(bmp, System.Drawing.Imaging.ImageFormat.Jpeg);
             return base64;
         }
     }
