@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.IO;
-//using System.Collections.Concurrent;
-//using System.Threading.Tasks;
+using System.Collections.Concurrent;
+using System.Threading.Tasks;
 
 namespace Citiport.Network
 {
@@ -53,37 +53,37 @@ namespace Citiport.Network
 
         public List<Image> fetch(List<String> urls)
         {
-            List<Image> images = new List<Image>();
-            for (int i = 0; i < urls.Count; i++)
-            {
-                String url = urls[i];
-                Stream imageStream = (Stream)Fetcher.fetch(url);
-                if (imageStream != null)
-                {
-                    using (System.Drawing.Image _Image = System.Drawing.Image.FromStream(imageStream))
-                    {
-                        Image __image = new Bitmap(_Image);
-                        images.Add(__image);
-                    }
-                }
-            }
-            return images;
-
-            //ConcurrentStack<Image> stack = new ConcurrentStack<Image>();
-            //Parallel.For(0, urls.Count, (i, loopState) =>
+            //List<Image> images = new List<Image>();
+            //for (int i = 0; i < urls.Count; i++)
+            //{
+            //    String url = urls[i];
+            //    Stream imageStream = (Stream)Fetcher.fetch(url);
+            //    if (imageStream != null)
             //    {
-            //        String url = urls[i];
-            //        Stream imageStream = (Stream)Fetcher.fetch(url);
-            //        if (imageStream != null)
+            //        using (System.Drawing.Image _Image = System.Drawing.Image.FromStream(imageStream))
             //        {
-            //            using (System.Drawing.Image _Image = System.Drawing.Image.FromStream(imageStream))
-            //            {
-            //                Image __image = new Bitmap(_Image);
-            //                stack.Push(__image);
-            //            }
+            //            Image __image = new Bitmap(_Image);
+            //            images.Add(__image);
             //        }
-            //    });
-            //return stack.ToList<Image>();
+            //    }
+            //}
+            //return images;
+
+            ConcurrentStack<Image> stack = new ConcurrentStack<Image>();
+            Parallel.For(0, urls.Count, (i, loopState) =>
+                {
+                    String url = urls[i];
+                    Stream imageStream = (Stream)Fetcher.fetch(url);
+                    if (imageStream != null)
+                    {
+                        using (System.Drawing.Image _Image = System.Drawing.Image.FromStream(imageStream))
+                        {
+                            Image __image = new Bitmap(_Image);
+                            stack.Push(__image);
+                        }
+                    }
+                });
+            return stack.ToList<Image>();
         }
     }
 }

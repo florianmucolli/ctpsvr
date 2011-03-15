@@ -36,8 +36,8 @@ public class HtmlUtil
             return null;
         foreach(Object k in texToFix.Keys)
         {
-            String key = DataUtil.ObjetToString(k);
-            text = text.Replace(key, DataUtil.ObjetToString(texToFix[key]));
+            String key = Citiport.Util.DataUtil.ObjetToString(k);
+            text = text.Replace(key, Citiport.Util.DataUtil.ObjetToString(texToFix[key]));
         }
         return text;
     }

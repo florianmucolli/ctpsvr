@@ -29,10 +29,14 @@ namespace CtpSvr.Sandbox
 
         protected void fetch()
         {
+            String key = Request["key"];
+            if (String.IsNullOrEmpty(key))
+                return;
+
             FlickrImageTiler tiler = new FlickrImageTiler();
             tiler.CacheManager = CacheFactory.GetCache();
-            Bitmap bmp = (Bitmap)tiler.tiler("tokyo", 5, 30, "relevance");
-            String filepath = MapPath("/Sandbox/tmp/tiled.jpg");
+            Bitmap bmp = (Bitmap)tiler.tiler(key, 5, 30, "relevance");
+            //String filepath = MapPath("/Sandbox/tmp/tiled.jpg");
             //bmp.Save(filepath);
             Response.ContentType = "image/jpeg";
             bmp.Save(Response.OutputStream, ImageFormat.Jpeg);
