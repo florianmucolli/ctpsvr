@@ -73,7 +73,7 @@ namespace Citiport.Net.Flickr
 
         // refer: http://www.flickr.com/services/api/misc.urls.html
         // http://farm{farm-id}.static.flickr.com/{server-id}/{id}_{secret}_[mstzb].jpg
-        const string PHOTO_SOURCE_URL = "http://farm{0}.static.flickr.com/{1}/{2}_{3}_{4}.jpg";
+        const string PHOTO_SOURCE_URL = "http://farm{0}.static.flickr.com/{1}/{2}_{3}{4}.jpg";
 
         public static List<FlickrPhoto> Parser(String json, String p_size)
         {
@@ -102,7 +102,7 @@ namespace Citiport.Net.Flickr
                                         (String)_p["server"],
                                         (String)_p["id"],
                                         (String)_p["secret"],
-                                        p_size);
+                                        (p_size =="")?p_size:"_"+p_size);
                                     fphoto.Url = url;
                                     result.Add(fphoto);
                                 }

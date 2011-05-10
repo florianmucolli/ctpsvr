@@ -17,8 +17,32 @@ namespace Citiport.Place
         {
             get { return attribteGet("titile"); }
             set { attributeSet("title", value); }
-
         }
+
+        public String Type
+        {
+            get { return attribteGet("type"); }
+            set { attributeSet("type", value); }
+        }
+
+        public String Phone
+        {
+            get { return attribteGet("phone"); }
+            set { attributeSet("phone", value); }
+        }
+
+        public String ImageUrl
+        {
+            get { return attribteGet("imageurl"); }
+            set { attributeSet("imageurl", value); }
+        }
+
+        public String Address
+        {
+            get { return attribteGet("address"); }
+            set { attributeSet("address", value); }
+        }
+
         public String Subtitle
         {
             get { return attribteGet("subtitle"); }
