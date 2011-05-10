@@ -23,11 +23,12 @@ namespace Citiport.Util.Wikipedia
 
         public static WikiArticle CreateWikiArticle(string title, string lang)
         {
-            string t = HttpContext.Current.Server.UrlEncode(title);
+            string t = HttpUtility.UrlEncode(title, Encoding.UTF8);
+            t = title;
             string url = string.Format(Wikipedia.GetWikipediaApiUrlByLang(lang), t);
             System.Net.HttpWebRequest webRequest = (HttpWebRequest)System.Net.WebRequest.Create(url);
-            try
-            {
+            //try
+            //{
                 webRequest.UserAgent = Wikipedia.FIREFOX_USERAGENT;
                 System.Net.HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse();
                 XmlDocument XMLdoc = new XmlDocument();
@@ -43,11 +44,11 @@ namespace Citiport.Util.Wikipedia
                     return article;
                 }else
                     return new WikiArticle(title, lang, new HtmlDocument());
-            }
-            catch (Exception exp)
-            {
-                throw exp;
-            }
+            //}
+            //catch (Exception exp)
+            //{
+            //    throw exp;
+            //}
         }
     }
 
