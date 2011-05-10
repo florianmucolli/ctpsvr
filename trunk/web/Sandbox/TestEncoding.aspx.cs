@@ -12,10 +12,14 @@ namespace CtpSvr.Sandbox
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            Response.Write(Server.UrlEncode("上海")+"<br/>");
+            //Response.Write(Server.UrlEncode("上海")+"<br/>");
+            Response.Write(Encoding.Default.EncodingName + "<br/>");
             Response.Write(HttpUtility.UrlEncode("上海", Encoding.Default)+"<br/>");
-            Response.Write(Encoding.Default.EncodingName);
-            Response.Write(HttpUtility.UrlEncode("上海", Encoding.UTF8) + "<br/>");
+            Response.Write(Encoding.UTF8.EncodingName + "<br/>");
+            String afterencode = HttpUtility.UrlEncode("上海", Encoding.UTF8);
+            Response.Write(afterencode + "<br/>");
+            Response.Write("after decode<br/>");
+            Response.Write(HttpUtility.UrlDecode(afterencode, Encoding.UTF8) + "<br/>");
         }
     }
 }
