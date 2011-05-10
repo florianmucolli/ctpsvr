@@ -18,14 +18,47 @@ namespace CtpSvr.Sandbox
             fetch();
         }
 
+        private void CityImageException(String cityname)
+        {
+            if (cityname == "台北")
+            {
+                Response.Redirect("sandbox\\cityimg\\c5.png");
+                //Bitmap img = new Bitmap(Server.MapPath("cityimg\\c5.png"));
+                //return Citiport.Util.DataUtil.ImageToBase64(img, ImageFormat.Png);
+            }
+            else if (cityname == "北京")
+            {
+                Response.Redirect("sandbox\\cityimg\\c4.png");
+                //Bitmap img = new Bitmap(Server.MapPath("cityimg\\c4.png"));
+                //return Citiport.Util.DataUtil.ImageToBase64(img, ImageFormat.Png);
+            }
+            else if (cityname == "上海")
+            {
+                Response.Redirect("sandbox\\cityimg\\c3.png");
+                //Bitmap img = new Bitmap(Server.MapPath("cityimg\\c3.png"));
+                //return Citiport.Util.DataUtil.ImageToBase64(img, ImageFormat.Png);
+            }
+            else if (cityname == "舊金山")
+            {
+                Response.Redirect("sandbox\\cityimg\\c2.png");
+                //Bitmap img = new Bitmap(Server.MapPath("cityimg\\c2.png"));
+                //return Citiport.Util.DataUtil.ImageToBase64(img, ImageFormat.Png);
+            }
+            else if (cityname == "香港")
+            {
+                Response.Redirect("sandbox\\cityimg\\c1.png");
+                //Bitmap img = new Bitmap(Server.MapPath("cityimg\\c1.png"));
+                //return Citiport.Util.DataUtil.ImageToBase64(img, ImageFormat.Png);
+            }
+        }
+
         protected void fetch()
         {
             String key = Request["key"];
             PhotosSearch photosearch = new PhotosSearch();
+            CityImageException(key);
             String base64 = photosearch.GetFirst(key, "relevance", "m");
             Bitmap bmp = (Bitmap)Citiport.Util.DataUtil.Base64ToImage(base64);
-            //String filepath = MapPath("/Sandbox/tmp/tiled.jpg");
-            //bmp.Save(filepath);
             Response.Clear();
             Response.ContentType = "image/jpeg";
             bmp.Save(Response.OutputStream, ImageFormat.Jpeg);

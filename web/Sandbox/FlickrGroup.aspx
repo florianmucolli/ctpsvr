@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="FlickrGroup.aspx.cs" Inherits="CtpSvr.Sandbox.FlickrGroup" %>

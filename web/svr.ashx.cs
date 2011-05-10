@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Text;
 using Citport.json;
+using Citiport.Place;
 
 namespace CtpSvr
 {
@@ -38,7 +39,10 @@ namespace CtpSvr
             }
             else if (method == "wiki")
             {
+                string encoding = _context.Request["encoding"];
                 string path = "CtpWikiProxy.ashx?key="+key;
+                if (!String.IsNullOrEmpty(encoding))
+                    path += "&encoding=" + encoding;
                 _context.Response.Redirect(path);
             }
             else if (method == "flickr")
@@ -51,6 +55,11 @@ namespace CtpSvr
                 string path = "Sandbox/FlickrFirst.aspx?key=" + key;
                 _context.Server.Transfer(path);
             }
+            else if (method == "flickrgroup")
+            {
+                string path = "Sandbox/FlickrGroup.aspx?key=900369@N21";
+                _context.Server.Transfer(path);
+            }
             else if (method == "geocode")
             {
                 string path = "Sandbox/geocoding.aspx?key=" + key;
@@ -58,7 +67,17 @@ namespace CtpSvr
             }
             else if (method == "places")
             {
-                string[] ss = key.Split(',');
+                string[] ss = new string[]{};
+                if (key.Contains(','))
+                    ss = key.Split(',');
+                else
+                {
+                    if (key.ToLower() == "beijing" || key == "北京")
+                        ss = new string[] { PlacesFakeData.BeijingLat + "", "0.0" };
+                    else
+                        ss = new string[] { PlacesFakeData.TaipeiLat + "", "0.0" };
+                }
+
                 string path = "Sandbox/TestPlacesFetcher.aspx?lat=" + ss[0] + "&lng=" + ss[1];
                 _context.Server.Transfer(path);
             }
