@@ -10,7 +10,7 @@ namespace Citiport.Place
         public static IPlacesFetcher getFetcher(object sender)
         {
             //return new DummyPlacesFetcherImpl() { Count = 30};
-            return new FakePlacesFetcherImpl();
+            return new GooglePlacesFetcherImpl();
         }
     }
 }
